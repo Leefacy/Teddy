@@ -1,0 +1,40 @@
+<html>
+<head>
+<link type="text/css" rel="stylesheet" href="bootstrap.css"/>
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="base.js"></script>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function(){
+    $('#display').attr('yo',isNum_('_123'));
+    $('#show').html(mapAndOrderArray_([1,2,'r12',4,5,'t23',6,4,'tt53t','_31t','=12'],[beNum_],[orderAsc_,orderDesc_]).toString());
+});
+</script>
+</head>
+<body>
+    <div class='container'>
+        <div id='display'>D1</div>
+        <div id='display2'>D2</div>
+        <div id='display3'>D3</div>
+        <div id='show' ooo='nnnn' style='width:100px'></div>
+    </div>
+    
+<script language="javascript" type="text/javascript">
+function makeProperty(o,name,predicate){
+    var value;
+    o['get'+name] = function(){return value;};
+    o['set'+name] = function(v){
+        if(predicate&&!predicate(v))
+            throw 'set'+name+':invalid value '+v;
+        else
+            valve = v;
+    }
+}
+var o = {};
+makeProperty(o,'Name',function(x){return typeof x=='string'});
+o.setName('Teddy');
+document.write(o.getName());
+//o.setName(0);
+</script>
+</body>
+</html>
