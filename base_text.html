@@ -8,6 +8,19 @@
 $(document).ready(function(){
     $('#display').attr('yo',isNum_('_123'));
     $('#show').html(mapAndOrderArray_([1,2,'r12',4,5,'t23',6,4,'tt53t','_31t','=12'],[beNum_],[orderAsc_,orderDesc_]).toString());
+    $('#card_commit').click(function(){
+        var obj = idCardParse($('#card').attr('value'));
+        if(obj.isCard){
+            $('.r').attr('display','block');
+            $('.w').attr('display','none');
+            $('#age').html(obj.age);
+            $('#sex').html(obj.sex);
+        }else{
+            $('.w').attr('display','block');
+            $('.r').attr('display','none');
+            $('#msg').html(obj.msg);
+        }
+    })
 });
 </script>
 </head>
@@ -16,7 +29,14 @@ $(document).ready(function(){
         <div id='display'>D1</div>
         <div id='display2'>D2</div>
         <div id='display3'>D3</div>
-        <div id='show' ooo='nnnn' style='width:100px'></div>
+        <div id='show1' ooo='nnnn' style='width:100px'>
+            <input type='text' id='card'/>
+            <input type='button' class='btn' id='card_commit' value='0-0'/>
+            <p id='age' class='r' display='none'></p>
+            <p id='sex' class='r' display='none'></p>
+            <p id='msg' class='w' display='none'></p>
+        </div>
+        <div id='show' ooo='nnnn' style='width:100px'>
     </div>
     
 <script language="javascript" type="text/javascript">
@@ -35,6 +55,7 @@ makeProperty(o,'Name',function(x){return typeof x=='string'});
 o.setName('Teddy');
 document.write(o.getName());
 //o.setName(0);
+document.write('@'+factorial_n(7));
 </script>
 </body>
 </html>

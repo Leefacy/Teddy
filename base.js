@@ -118,13 +118,182 @@ var orderArray_ = function(/*array*/arr,/*functions' array*/arrs){
     }
     return results;
 }
+/* 16.Parse ID card
+   Return a object contains isCard,age,sex*/
+var idCardParse = function(num){
+    var idCard = {isCard:true};   // the return object.
+    var no = num.toString();   // the id card number
+    var age;  //
+    var sex;  //
+    try{
+        if(no.length==18){//身份证位数为18位
+		  for(var i=0;i<17;i++){//前十七个必须是数字
+			if(isNaN(Number(no.charAt(i)))){
+				throw new Error('非法的身份证号码!前17位应该是数字.');
+			}
+		  }
+		  if(isNaN(Number(no.charAt(17)))){//最后一位可以是x
+			if(no.charAt(17)!='X'&&no.charAt(17)!='x'){
+				throw new Error('非法的身份证号码!最后为只能为X或者x的非数字字符.');
+			}
+		  }
+		  if(Number(no.substr(10,2))>12||Number(no.substr(10,2))==0){//月份必须在1-12之间
+			throw new Error('非法的身份证号码!月份应该在1-12之间.');
+		  }
+		  var year = Number(no.substr(6,4));
+		  if(year%400==0||(year%4==0&&year%100!=0)){//判断是否为闰年
+			if(Number(no.substr(10,2))==2){//闰年2月有29天
+				if(Number(no.substr(12,2))>29||Number(no.substr(12,2))==0){
+					throw new Error('非法的身份证号码!');
+				}
+			}
+		  }else{//非闰年，二月为28天
+			if(Number(no.substr(10,2))==2){
+				if(Number(no.substr(12,2))>28||Number(no.substr(12,2))==0){
+					throw new Error('非法的身份证号码!');
+				}
+			}
+		  }
+		  var month = Number(no.substr(10,2));//判断大月是否正确
+		  if(month==1||month==3||month==5||month==7||month==8||month==10||month==12){
+			if(Number(no.substr(12,2))>31||Number(no.substr(12,2))==0){
+				throw new Error('非法的身份证号码!');
+			}
+		  }//判断小月是否正确
+		  if(month==4||month==6||month==9||month==11){
+			if(Number(no.substr(12,2))>30||Number(no.substr(12,2))==0){
+				throw new Error('非法的身份证号码!');
+			}
+		  }
+		  //判断性别
+		  sex = Number(no.substr(16,1))%2;
+		  //判断出生年月日
+		  var birthday = no.substr(6,4)+"-"+no.substr(10,2)+"-"+no.substr(12,2);
+		  //判断年龄
+		  var date = new Date();
+		  date.setYear(Number(no.substr(6,4)));
+		  date.setMonth(Number(no.substr(10,2))-1);	
+		  date.setDate(Number(no.substr(12,2)));	
+		  var now = new Date();
+		  age = Number(now.getFullYear())-Number(date.getFullYear());
 
+		  now.setYear(date.getFullYear());
+		  if(now.getTime()-date.getTime()<0){
+			age = age -1;
+		  }
+	   }else if(no.length==15){//身份证位数为15位
+		  for(var i=0;i<15;i++){//前十五个必须是数字
+			if(isNaN(Number(no.charAt(i)))){
+                throw new Error('非法的身份证号码!');
+			}
+		  }
+		  if(Number(no.substr(8,2))>12||Number(no.substr(8,2))==0){//月份必须在1-12之间
+			throw new Error('非法的身份证号码!');
+		  }
+		  var year = Number('19'+no.substr(6,2));
+		  if(year%400==0||(year%4==0&&year%100!=0)){//判断是否为闰年
+			if(Number(no.substr(8,2))==2){//闰年2月有29天
+				if(Number(no.substr(10,2))>29||Number(no.substr(10,2))==0){
+					throw new Error('非法的身份证号码!');
+				}
+			}
+		  }else{//非闰年，二月为28天
+			if(Number(no.substr(8,2))==2){
+				if(Number(no.substr(10,2))>28||Number(no.substr(10,2))==0){
+					throw new Error('非法的身份证号码!');
+				}
+			}
+		  }
+		  var month = Number(no.substr(8,2));//判断大月是否正确
+		  if(month==1||month==3||month==5||month==7||month==8||month==10||month==12){
+			if(Number(no.substr(10,2))>31||Number(no.substr(10,2))==0){
+				throw new Error('非法的身份证号码!');
+			}
+		  }//判断小月是否正确
+		  if(month==4||month==6||month==9||month==11){
+			if(Number(no.substr(10,2))>30||Number(no.substr(10,2))==0){
+				throw new Error('非法的身份证号码!');
+			}
+		  }
+		  //判断性别
+		  sex = Number(no.substr(14,1))%2;
+		  //判断出生年月日
+		  var birthday = '19'+no.substr(6,2)+"-"+no.substr(8,2)+"-"+no.substr(10,2);
+		  //判断年龄
+		  var date = new Date();
+		  date.setYear(Number('19'+no.substr(6,2)));
+		  date.setMonth(Number(no.substr(8,2))-1);	
+		  date.setDate(Number(no.substr(10,2)));	
+		  var now = new Date();
+		  age = Number(now.getFullYear())-Number(date.getFullYear());
 
-
-
-
-
-
+		  now.setYear(date.getFullYear());
+		  if(now.getTime()-date.getTime()<0){
+			age = age -1;
+		  }
+	   }else{
+		  throw new Error('输入的身份证号码位数不对!');
+	   }
+    }catch(e){
+        idCard.isCard = false;
+        idCard.msg = e.message;
+    }finally{
+        if(idCard.isCard){
+            idCard.age = age;
+            idCard.sex = sex?'男':'女';
+        }
+        return idCard;
+    }
+}
+/* 17.This function implements a breakpoint. It repeatedly prompts the user
+   for an expression,evaluates it with the supplied self-inspecting closure,
+   and displays the result. It is the closure that provides access to the
+   scope to be inspected, so each function must supply its own closure.
+   Inspired bt Steve Yen's breakpoint() function at 
+   http://trimpath.com/project/wiki/TrimBreakpoint*/
+var inspect_ = function(inspector, title){
+    var expression,result;
+    /* You can use a breakpoint to turn off subsequent breakpoints by creating 
+        a preoperty named 'ignore' on this function.*/
+    if('ignore' in arguments.callee) return;
+    
+    while(true){
+        /*Figure out how to prompt the user*/
+        var message = '';
+        /*if we were given a title, display that first*/
+        if(title) message = title+'\n';
+        /*if we have already evaluated an expression, display it and its value*/
+        if(expression) message +='\n'+expression+'==>'+result+'\n';
+        else expression ='';
+        /* we always display at least a basic prompt*/
+        message += 'Enter an expression to evaluate:';
+        
+        /*Get the user's input, displaying our prompt and using the last
+        expression as the default value this time.*/
+        expression = prompt(message,expression);
+        
+        /*If the user did not enter anything( or clicked cancel ), they are done, and
+        so we return ,ending the breakpoint.*/
+        if(!expression) return;
+        
+        /*Otherwise, use the supplied closure ti evaluate the expression in the 
+        scope that is being inspected. The result will be displayed on the next
+        iteration.*/
+        result = inspector(expression);
+    }
+}
+var factorial_n = function(n){
+    var inspector = function($){ return eval($);}
+    inspect_(inspector, 'Entering factorial{}');
+    var result = 1;
+    while(n>1){
+        result = result*n;
+        n--;
+        inspect_(inspector,'factorial() loop');
+    }
+    inspect_(inspector,'Exiting factorial{}');
+    return result;
+}
 
 
 
